@@ -4,8 +4,7 @@
  :aliases
  {:run-m {:main-opts ["-m" "yulqen.quicknote"]}
   :run-x {:ns-default yulqen.quicknote
-          :exec-fn append-to-file
-          :exec-args {:name "Clojure"}}
+          :exec-fn append-to-file}
   :build {:deps {io.github.clojure/tools.build
                  {:mvn/version "0.10.5"}}
           :ns-default build}
