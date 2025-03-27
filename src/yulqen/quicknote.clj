@@ -1,5 +1,7 @@
 (ns yulqen.quicknote
-  (:require [net.cgrand.enlive-html :as html])
+  (:require
+   [clojure.tools.cli :refer [parse-opts]]
+   [net.cgrand.enlive-html :as html])
   (:import [java.awt.datatransfer DataFlavor])
   (:gen-class))
 
@@ -34,13 +36,16 @@
 (defn url-to-markdown [url]
   (format-markdown-link (get-title-text url) url))
 
-(defn append-to-file []
-  (let [url (clipboard-text)
-        path "/home/lemon/Documents/Notes/quicknote.md"]
-    (spit path (apply str "- " (url-to-markdown url) "\n") :append true)))
-
+(defn append-to-file
+  ([]
+   (let [url (clipboard-text)
+         path "/home/lemon/Documents/Notes/quicknote.md"]
+     (spit path (apply str "- " (url-to-markdown url) "\n") :append true)))
+  ([comment]
+   (let [url (clipboard-text)
+         path "/home/lemon/Documents/Notes/quicknote.md"]
+     (spit path (apply str "- " comment ": " (url-to-markdown url) "\n") :append true))))
 
 (defn -main
-  "I don't do a whole lot ... yet."
   [& args]
-  (greet {:name (first args)}))
+  (if args (append-to-file (first args)) (append-to-file)))
