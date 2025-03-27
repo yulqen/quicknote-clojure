@@ -5,16 +5,32 @@
   (:import [java.awt.datatransfer DataFlavor])
   (:gen-class))
 
+;; Java equivalent of clipboard-text, according to ChatGPT
+;;
+;; import java.awt.*;
+;; import java.awt.datatransfer.*;
+
+;; public class ClipboardHelper {
+;;     public static String clipboardText() {
+;;         try {
+;;             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+;;             Transferable contents = clipboard.getContents(null);
+;;             return (String) contents.getTransferData(DataFlavor.stringFlavor);
+;;         } catch (Exception e) {
+;;             return null;
+;;         }
+ 
+
 (defn
- clipboard-text
- []
- (try
-  (.getTransferData
-   (.getContents
-    (.getSystemClipboard (java.awt.Toolkit/getDefaultToolkit))
-    nil)
-   (DataFlavor/stringFlavor))
-  (catch java.lang.NullPointerException e nil)))
+  clipboard-text
+  []
+  (try
+    (.getTransferData
+     (.getContents
+      (.getSystemClipboard (java.awt.Toolkit/getDefaultToolkit))
+      nil)
+     (DataFlavor/stringFlavor))
+    (catch java.lang.NullPointerException e nil)))
 
 (defn greet
   "Callable entry point to the application."
@@ -26,7 +42,8 @@
     (first (:content (first (html/select (html/html-resource (java.net.URL. url)) [:title]))))
     (catch java.net.MalformedURLException e
       (do
-        (println "Not a URL")) nil)))
+        (println "Not a URL. You need a URL on your clipboard for this to work."))
+      (System/exit 1))))
 
 (defn format-markdown-link
   "Formats text and url as a markdown link"
